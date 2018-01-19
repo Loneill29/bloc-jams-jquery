@@ -18,12 +18,30 @@ $('button#previous').on('click', function() {
   if (player.playState !== 'playing') { return; }
 
   const currentSongIndex = album.songs.indexOf(player.currentlyPlaying);
-  console.log("currentSongIndex is", currentSongIndex);
   const previousSongIndex = currentSongIndex - 1;
-  console.log("previousSongIndex is", previousSongIndex);
   if (currentSongIndex <= 0) { return; }
   const previousSong = album.songs[previousSongIndex];
 
   player.playPause(previousSong);
 });
+
+$('#time-control input').on('input', function (event) {
+  player.skipTo(event.target.value);
+});
+
+$('#volume-control input').on('input', function(event) {
+  player.setVolume(event.target.value);
+});
+
+setInterval( () => {
+if (player.playState !== 'playing') {return;}
+const currentTime = player.getTime();
+const duration = player.getDuration();
+const percent = (currentTime/duration) * 100;
+const totalTime = (duration - currentTime);
+$('#time-control .current-time').text( currentTime );
+$('#time-control input').val(percent);
+$('#time-control .total-time').text( totalTime );
+}, 1000);
+
 }
